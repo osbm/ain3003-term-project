@@ -1,0 +1,18 @@
+# mongo-service.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  labels:
+    app: mongodb
+spec:
+  # clusterIP:  10.96.0.11
+  type: LoadBalancer 
+  externalTrafficPolicy: Local 
+
+  selector:
+    app: mongodb  # Match the labels in the StatefulSet
+  ports:
+    - port: 27017
+      targetPort: 27017
