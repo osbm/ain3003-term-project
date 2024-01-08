@@ -40,3 +40,14 @@ The following must be turned in by students:
 - Proper MongoDB setup and configuration on Kubernetes.
 - Clear and well-organized documentation.
 
+
+
+# to create the cluster 
+
+```
+minikube start
+kubectl apply -f mongo-statefulset.yaml
+kubectl apply -f mongo-service.yaml
+mongosh $(minikube service mongodb --url | sed 's,.*/,,')
+```
+
