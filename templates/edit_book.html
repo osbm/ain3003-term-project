@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Book</title>
+</head>
+<body>
+    <a href="/books">Back to List</a>
+    <h1>Edit Book</h1>
+    <form action="/books/{{ book.isbn }}/edit" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+        <p>Title: <input type="text" name="title" value="{{ book.title }}"></p>
+        <p>Author first name: <input type="text" name="author_first_name" value="{{ book.author.firstName }}"></p>
+        <p>Author last name: <input type="text" name="author_last_name" value="{{ book.author.lastName }}"></p>
+        <p>Year: <input type="text" name="year" value="{{ book.year }}"></p>
+        <p>ISBN: <input type="text" name="isbn" value="{{ book.isbn }}"></p>
+        <p>Price: <input type="text" name="price" value="{{ book.price }}"></p>
+        <input type="submit" value="Update">
+    </form>
+</body>
+</html>

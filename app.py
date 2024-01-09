@@ -1,67 +1,112 @@
-from flask import Flask, jsonify, request, render_template
-from flask_pymongo import PyMongo
+from flask import Flask, jsonify, request, render_template, redirect, url_for
+from pymongo import MongoClient
 
 import os
 
-# get mongo uri from env
+# prepare mongo connection
 mongo_uri = os.getenv("MONGO_URI")
 print("mongo_uri: ", mongo_uri)
+mongo_client = MongoClient(mongo_uri + "/bookstoredatabase")
+database = mongo_client["bookstoredatabase"]
+collection = database["bookstorecollection"]
 
+# prepare flask app
 app = Flask(__name__, template_folder="templates")
-app.config["MONGO_URI"] = mongo_uri + "/bookstoredatabase"
+
 
 # database name is bookstoredatabase
 # collection name is bookstorecollection
 
-mongo = PyMongo(app)
-
-@app.route("/books", methods=["GET"])
-def get_all_books():
-    books = mongo.db.bookstorecollection
-    output = []
-    for book in books.find():
-        output.append(
-            {
-                "title": book["title"],
-                "author": book["author"],
-                "isbn": book["isbn"],
-                "price": book["price"],
-            }
-        )
-    return jsonify({"result": output})
-
-@app.route("/books/add", methods=["GET"])
-def render_add_book_form():
-    return render_template("add_book.html")
-
-
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
 
-# add a book
+
+@app.route("/books", methods=["GET"])
+def get_all_books():
+    books = collection.find()
+    return render_template("show_books.html", books=books)
+
+@app.route("/books/restore", methods=["GET"])
+def restore_all_books():
+    # drop collection
+    collection.drop()
+    # recreate collection from bookstrore.json
+    
+    # import documents from json file
+    import json
+    with open("bookstore.json") as f:
+        books = json.load(f)
+    collection.insert_many(books)
+
+    books = collection.find()
+    return render_template("show_books.html", books=books)
+
+    
+
+
+@app.route("/books/<book_isbn>", methods=["GET"])
+def get_book(book_isbn):
+    book = collection.find_one({"isbn": book_isbn})
+    return render_template("show_book.html", book=book)
+
+# @app.route("/books/<book_isbn>/edit", methods=["GET"])
+# def edit_book(book_isbn):
+#     book = collection.find_one({"isbn": book_isbn})
+#     return render_template("edit_book.html", book=book)
+
+# @app.route("/books/<book_isbn>/edit", methods=["POST"])
+# def update_book(book_isbn):
+#     book = request.form
+#     print("book_isbn: ", book_isbn)
+#     print("book: ", book)
+#     collection.update_one({"isbn": book_isbn}, {"$set": book})
+#     return redirect(url_for("get_all_books"))
+
+
+# now merge the two routes below into one
+
+@app.route("/books/<book_isbn>/edit", methods=["GET", "POST"])
+def edit_book(book_isbn):
+    if request.method == "GET":
+        book = collection.find_one({"isbn": book_isbn})
+        return render_template("edit_book.html", book=book)
+    else:
+        book = request.form
+        # print new values from form
+        # print("book_isbn: ", book_isbn)
+        print("book: ", book)
+        for key in book:
+            print(key, book[key])
+
+        collection.update_one(
+            {"isbn": book_isbn},
+            {"$set":
+                {
+                    "isbn": book["isbn"],
+                    "title": book["title"],
+                    "author.firstName": book["author_first_name"],
+                    "author.lastName": book["author_last_name"],
+                    "year": book["year"],
+                    "price": book["price"]
+                }
+            },
+            upsert=True
+        )
+        return redirect(url_for("get_all_books"))
+
+@app.route("/books/<book_isbn>/delete", methods=["GET"])
+def delete_book(book_isbn):
+    book = collection.find_one({"isbn": book_isbn})
+    collection.delete_one({"isbn": book_isbn})
+    return redirect(url_for("get_all_books"))
+
+
 @app.route("/books", methods=["POST"])
 def add_book():
-    books = mongo.db.bookstorecollection
-    title = request.json["title"]
-    author = request.json["author"]
-    isbn = request.json["isbn"]
-    price = request.json["price"]
-    
-    book_id = books.insert_one(
-        {"title": title, "author": author, "isbn": isbn, "price": price}
-    ).inserted_id
-    
-    new_book = books.find_one({"_id": book_id})
-    output = {
-        "title": new_book["title"],
-        "author": new_book["author"],
-        "isbn": new_book["isbn"],
-        "price": new_book["price"],
-    }
-    return jsonify({"result": output})
-
-
+    book = request.form
+    collection.insert_one(book)
+    return render_template("add_book.html", book=book)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

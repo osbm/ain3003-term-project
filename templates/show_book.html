@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Book</title>
+</head>
+<body>
+    <a href="/books">Back to List</a>
+    <h1>Show Book</h1>
+    <p>Title: {{ book.title }}</p>
+    <p>Author: {{ book.author.firstName }} {{ book.author.lastName }}</p>
+    <p>Year: {{ book.year }}</p>
+    <p>ISBN: {{ book.isbn }}</p>
+    <p>Price: {{ book.price }}</p>
+    <a href="/books/{{ book.isbn }}/edit">Edit</a> |
+    <a href="/books/{{ book.isbn }}/delete">Delete</a>
+</body>
+</html>
