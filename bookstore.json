@@ -30,8 +30,8 @@
     }
   },
   {
-    "isbn": "Mastering JavaScript Design Patterns",
-    "title": "1783987987",
+    "isbn": "1783987987",
+    "title": "Mastering JavaScript Design Patterns",
     "year": 2014,
     "price": 40.49,
     "page": 290,
@@ -41,8 +41,8 @@
     "author": { "identityNo": "8", "firstName": "Simon", "lastName": "Timms" }
   },
   {
-    "isbn": "CSS3: The Missing Manual",
-    "title": "1449325947",
+    "isbn": "1449325947",
+    "title": "CSS3: The Missing Manual",
     "year": 2013,
     "price": 28.48,
     "page": 650,
