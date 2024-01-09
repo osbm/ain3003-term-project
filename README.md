@@ -48,7 +48,19 @@ The following must be turned in by students:
 minikube start
 kubectl apply -f mongo-statefulset.yaml
 kubectl apply -f mongo-service.yaml
-MONGOIP=$(minikube service mongodb --url | sed 's,.*/,,')
-mongoimport --file=bookstore.json --collection=bookstorecollection --uri=mongodb://192.168.49.2:30524 --jsonArray --db=bookstoredb
+export MONGO_URI=mongodb://$(minikube service mongodb --url | sed 's,.*/,,')
+mongoimport --file=bookstore.json --collection=bookstorecollection --uri=$MONGO_URI --jsonArray --db=bookstoredb
 
 ```
+
+
+# to start the python app
+
+```
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+curl -X POST -H "Content-Type: application/json" -d '{"title":"YourTitle","author":"YourAuthor","isbn":"YourISBN","price":3}' http://localhost:5000/books
