@@ -6,16 +6,47 @@
     <title>Project title</title>
 </head>
 <body>
-    <h1>AIN3003 Term Project</h3>
+    <h1>AIN3003 Term Project - Proposal 1</h3>
 
-    <h2>Bookstore database showcase</h1>
-
-    <p>This app implements CRUD operations on the Bookstore dataset.</p>
-
-    <a href="books">show books</a>
+    <h2>Bookstore database CRUD operations on kubernetes showcase</h1>
 
     
-    
+
+    <div class="container">
+        <h1>Books</h1>
+
+        <a href="/books/restore">Restore all books</a>
+        <a href="/books/add">Add a new book</a>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>ISBN</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author.firstName }} {{ book.author.lastName }}</td>
+                    <td>{{ book.year }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.price }}</td>
+                    <td>
+                        <a href="/books/{{ book.isbn }}">Show</a> |
+                        <a href="/books/{{ book.isbn }}/edit">Edit</a> |
+                        <a href="/books/{{ book.isbn }}/delete">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
 </body>
 </html>

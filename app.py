@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, render_template, redirect, url_for
 from pymongo import MongoClient
-
+import json
 import os
 
 # prepare mongo connection
@@ -17,30 +17,25 @@ app = Flask(__name__, template_folder="templates")
 # database name is bookstoredatabase
 # collection name is bookstorecollection
 
+# @app.route("/", methods=["GET"])
+# def index():
+#     return render_template("index.html")
+
+
 @app.route("/", methods=["GET"])
-def index():
-    return render_template("index.html")
-
-
-@app.route("/books", methods=["GET"])
 def get_all_books():
     books = collection.find()
-    return render_template("show_books.html", books=books)
+    return render_template("index.html", books=books)
 
 @app.route("/books/restore", methods=["GET"])
 def restore_all_books():
-    # drop collection
     collection.drop()
-    # recreate collection from bookstrore.json
-    
-    # import documents from json file
-    import json
     with open("bookstore.json") as f:
         books = json.load(f)
     collection.insert_many(books)
 
     books = collection.find()
-    return render_template("show_books.html", books=books)
+    return render_template("index.html", books=books)
 
 @app.route("/books/add", methods=["GET", "POST"])
 def add_book_form():
@@ -97,12 +92,6 @@ def delete_book(book_isbn):
     collection.delete_one({"isbn": book_isbn})
     return redirect(url_for("get_all_books"))
 
-
-@app.route("/books", methods=["POST"])
-def add_book():
-    book = request.form
-    collection.insert_one(book)
-    return render_template("add_book.html", book=book)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
