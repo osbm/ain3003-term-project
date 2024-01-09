@@ -48,6 +48,7 @@ The following must be turned in by students:
 minikube start
 kubectl apply -f mongo-statefulset.yaml
 kubectl apply -f mongo-service.yaml
-mongosh $(minikube service mongodb --url | sed 's,.*/,,')
-```
+MONGOIP=$(minikube service mongodb --url | sed 's,.*/,,')
+mongoimport --file=bookstore.json --collection=bookstorecollection --uri=mongodb://192.168.49.2:30524 --jsonArray --db=bookstoredb
 
+```
