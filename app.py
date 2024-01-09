@@ -42,29 +42,31 @@ def restore_all_books():
     books = collection.find()
     return render_template("show_books.html", books=books)
 
-    
-
+@app.route("/books/add", methods=["GET", "POST"])
+def add_book_form():
+    if request.method == "GET":
+        return render_template("add_book.html")
+    else:
+        book = request.form
+        collection.insert_one(
+            {
+                "isbn": book["isbn"],
+                "title": book["title"],
+                "author": {
+                    "firstName": book["author_first_name"],
+                    "lastName": book["author_last_name"]
+                },
+                "year": book["year"],
+                "price": book["price"]
+            }
+        )
+        return redirect(url_for("get_all_books"))
 
 @app.route("/books/<book_isbn>", methods=["GET"])
 def get_book(book_isbn):
     book = collection.find_one({"isbn": book_isbn})
     return render_template("show_book.html", book=book)
 
-# @app.route("/books/<book_isbn>/edit", methods=["GET"])
-# def edit_book(book_isbn):
-#     book = collection.find_one({"isbn": book_isbn})
-#     return render_template("edit_book.html", book=book)
-
-# @app.route("/books/<book_isbn>/edit", methods=["POST"])
-# def update_book(book_isbn):
-#     book = request.form
-#     print("book_isbn: ", book_isbn)
-#     print("book: ", book)
-#     collection.update_one({"isbn": book_isbn}, {"$set": book})
-#     return redirect(url_for("get_all_books"))
-
-
-# now merge the two routes below into one
 
 @app.route("/books/<book_isbn>/edit", methods=["GET", "POST"])
 def edit_book(book_isbn):
@@ -73,12 +75,6 @@ def edit_book(book_isbn):
         return render_template("edit_book.html", book=book)
     else:
         book = request.form
-        # print new values from form
-        # print("book_isbn: ", book_isbn)
-        print("book: ", book)
-        for key in book:
-            print(key, book[key])
-
         collection.update_one(
             {"isbn": book_isbn},
             {"$set":
