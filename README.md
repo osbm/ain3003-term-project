@@ -57,10 +57,8 @@ mongoimport --file=bookstore.json --collection=bookstorecollection --uri=$MONGO_
 # to start the python app
 
 ```
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+kubectl apply -f flask-mongo-service.yaml
+kubectl apply -f flask-deployment.yaml
+kubectl apply -f flask-service.yaml
+minikube service flask
 ```
-
-curl -X POST -H "Content-Type: application/json" -d '{"title":"YourTitle","author":"YourAuthor","isbn":"YourISBN","price":3}' http://localhost:5000/books
