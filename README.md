@@ -1,5 +1,6 @@
 I have chosen Project Proposal 1 from [project-proposals.md](project-proposals.md).
 
+![project-screenshot](./assets/screenshot.png)
 
 ## Using MongoDB on Kubernetes to Build and Launch a Containerized Python Application with Flask
 
@@ -9,45 +10,14 @@ The purpose of this assignment is to develop a Python application that is scalab
 
 Students will gain important experience working with database interactions, Kubernetes orchestration, and containerization in a real-world setting with this project. It goes over the basic ideas behind setting up and running containerized apps in a distributed setting.
 
-### Tasks:
-- Task-1: Construct MongoDB:
-    - Use a Kubernetes StatefulSet to deploy a MongoDB instance.
-    - To expose the MongoDB instance, create a Kubernetes service.
-    - Use BOOKSTORE database from our MongoDb Classes
-- Task-2: Develop Python Application: Create a Python script that carries out CRUD (Create, Read, Update, Delete) actions by connecting to the MongoDB instance.
-    - Employ a Python driver for MongoDB (like PyMongo) to communicate with the database.
-    - Use Flask tools to ensure a RESTful application
-    - Use Docker to containerize the Python program.
-- Task-3: Kubernetes Deployment:
-    - Establish a Python application Kubernetes deployment.
-    - For configuration, use Kubernetes ConfigMaps or environment variables.
-- Task-4: Service Discovery: Using Kubernetes Services, implement service discovery between the Python application and MongoDB.
-    - Verify that the MongoDB instance can be dynamically found and connected to by the Python program.
-- Task-5: Documentation:
-    - Clearly explain how to install and use the complete system in your documentation.
-    - Provide guidance on how to launch the Python application on Kubernetes, build and push the Docker image, and launch the MongoDB instance.
-
-
-## Submission
-The following must be turned in by students:
-- Entire source code for the Python program.
-- YAML files pertaining to StatefulSet, Deployment, and other Kubernetes resource types.
-- Explanations and detailed instructions included in the documentation.
-
-## Evaluation Standards
-- Proper implementation of CRUD operations in the Python application.
-- The Python + Flask application was successfully deployed on Kubernetes.
-- Proper MongoDB setup and configuration on Kubernetes.
-- Clear and well-organized documentation.
-
+You can find more information regarding the proposal [here](project-proposals.md).
 
 # Steps to run the project
 
 First of all you need a kubernetes cluster. I have used minikube for this project. I also installed mongo client on my machine to test stuff and feed the test data to the mongo instance.
 
-
-
 ## Step 1: Setup the kubernetes cluster
+
 Lets start the minikube cluster
 
 ```
@@ -165,7 +135,7 @@ local              32.00 KiB
 
 ## Step 5: Create the flask deployment
 
-Now lets create the flask deployment. This will create a flask instance with 1 replica. The docker image of the flask application will be pulled from [my docker hub repository](https://hub.docker.com/r/osbm/ain3003-flask-application). The docker image is created from the Dockerfile in the flask-application directory. So this may take some time to pull the image.
+Now lets create the flask deployment. This will create a flask instance with 1 replica. The docker image of the flask application will be pulled from [my docker hub repository](https://hub.docker.com/r/osbm/ain3003-flask-application). The docker image is created from the Dockerfile in the flask-application directory. So this will take some time to pull the image.
 
 ```
 kubectl apply -f flask-deployment.yaml
@@ -226,7 +196,7 @@ statefulset.apps/mongodb   1/1     17m
 
 ## Step 7: Test the flask application
 
-Now lets test the flask application. For this we need to get the flask uri. We can get it by running the following command:
+Now lets enjoy the flask application.
 
 ```
 minikube service flask

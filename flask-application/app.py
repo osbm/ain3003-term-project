@@ -13,15 +13,6 @@ collection = database["bookstorecollection"]
 # prepare flask app
 app = Flask(__name__, template_folder="templates")
 
-
-# database name is bookstoredatabase
-# collection name is bookstorecollection
-
-# @app.route("/", methods=["GET"])
-# def index():
-#     return render_template("index.html")
-
-
 @app.route("/", methods=["GET"])
 def get_all_books():
     books = collection.find()

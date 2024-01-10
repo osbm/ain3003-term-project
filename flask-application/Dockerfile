@@ -9,6 +9,7 @@ RUN pip install -r requirements.txt
 EXPOSE 5000
 
 # Set the default value for MONGO_URI if not provided
+# you can change this environment variable during runtime
 ENV MONGO_URI="mongodb://localhost:27017"
 
 
